@@ -1,0 +1,11 @@
+{
+  "builds": [{
+    "src": "manage.py",
+    "use": "@vercel/python",
+    "config": { "maxRuntimeSize": 31 }
+  }],
+  "routes": [{
+    "src": "/(.*)",
+    "dest": "manage.py"
+  }]
+}
