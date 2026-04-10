@@ -15,7 +15,6 @@ def home(request):
     return render(request, "predictions/home.html")
 
 
-@login_required
 def predict_view(request):
     model, metadata = load_ml_artifacts()
 
