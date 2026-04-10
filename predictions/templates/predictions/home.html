@@ -56,14 +56,14 @@
 {% block content %}
 <div class="home-wrap">
       <div class="home-cta-row">
-        {% if user.is_authenticated %}
+      {% if user.is_authenticated %}
         <a class="home-cta home-cta--teal" href="{% url 'predict' %}">Lancer une estimation</a>
         <a class="home-cta home-cta--violet" href="{% url 'diagrams' %}">Voir les graphiques</a>
         <a class="home-cta home-cta--amber" href="#explorer">Explorer ci-dessous</a>
         {% else %}
-        <a class="home-cta home-cta--teal" href="{% url 'login' %}">Connexion</a>
-        <a class="home-cta home-cta--violet" href="{% url 'signup' %}">Créer un compte</a>
-        <a class="home-cta home-cta--sky" href="{% url 'login' %}?next={% url 'predict' %}">Accéder à l’estimation</a>
+        <a class="home-cta home-cta--teal" href="{% url 'predict' %}">Lancer une estimation</a>
+        <a class="home-cta home-cta--violet" href="{% url 'login' %}">Connexion</a>
+        <a class="home-cta home-cta--sky" href="{% url 'signup' %}">Créer un compte</a>
         <a class="home-cta home-cta--amber" href="#explorer">Explorer ci-dessous</a>
         {% endif %}
       </div>
@@ -73,20 +73,12 @@
         <div class="home-card-v2 home-card-v2--teal">
           <h3>1) Je renseigne</h3>
           <p>Je choisis l’indicateur, la période, le sexe et l’unité dans un formulaire guidé.</p>
-          {% if user.is_authenticated %}
           <a href="{% url 'predict' %}">Commencer</a>
-          {% else %}
-          <a href="{% url 'login' %}">Se connecter</a>
-          {% endif %}
         </div>
         <div class="home-card-v2 home-card-v2--violet">
           <h3>2) Je reçois</h3>
           <p>Je reçois une estimation et une explication en langage clair pour bien interpréter le chiffre.</p>
-          {% if user.is_authenticated %}
-          <a href="{% url 'predict' %}">Voir mon résultat</a>
-          {% else %}
-          <a href="{% url 'login' %}">Se connecter</a>
-          {% endif %}
+          <a href="{% url 'predict' %}">Voir mon resultat</a>
         </div>
         <div class="home-card-v2 home-card-v2--coral">
           <h3>3) Je compare</h3>
