@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block title %}Estimation{% endblock %}
+{% block content %}
+      <header class="hero">
+        <span class="badge">Données de santé infantile (UNICEF)</span>
+        <h1>Obtenez une estimation en quelques clics</h1>
+        <p class="lead">
+          Commencez par les champs principaux, puis complétez les informations avancées.
+          Nous affichons ensuite un résultat expliqué en langage simple pour vous aider à l'interpréter.
+        </p>
+      </header>
+
+      <div class="home-cards" style="margin-bottom: 1rem;">
+        <div class="home-card">
+          <h2>1. Choisissez le contexte</h2>
+          <p>Indicateur, période, sexe et unité: ce sont les informations essentielles.</p>
+        </div>
+        <div class="home-card">
+          <h2>2. Lisez le résultat guidé</h2>
+          <p>Le chiffre est accompagné d'une explication claire et d'un rappel de vos choix.</p>
+        </div>
+      </div>
+
+      <div class="layout">
+        <article class="card">
+          <div class="card-header">
+            <h2>Remplissez le formulaire</h2>
+            <p>Méthode retenue :
+              <strong style="color: var(--accent)">
+                {% if model_name == "Linear Regression" %}Régression linéaire
+                {% elif model_name == "Decision Tree" %}Arbre de décision
+                {% elif model_name == "Random Forest" %}Forêt aléatoire
+                {% else %}{{ model_name }}{% endif %}
+              </strong>
+            </p>
+          </div>
+          <div class="card-body">
+            <form method="post" novalidate>
+              {% csrf_token %}
+              <h3 class="form-section-title">Champs principaux</h3>
+              <p class="form-section-note">Pour la plupart des utilisateurs, commencez par ces informations.</p>
+              <div class="form-grid">
+                {% for field in form %}
+                  {% if field.name == "Indicator" or field.name == "TIME_PERIOD" or field.name == "SEX" or field.name == "UNIT_MEASURE" %}
+                  <div class="field-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.name == "Indicator" %}
+                      <span class="unit-caption">Choisissez ce que vous voulez mesurer (ex: mortalité infantile).</span>
+                    {% elif field.name == "TIME_PERIOD" %}
+                      <span class="unit-caption">Sélectionnez l'année ou la période qui vous intéresse.</span>
+                    {% elif field.name == "UNIT_MEASURE" %}
+                      <span class="unit-caption">L'unité indique comment lire le chiffre (nombre total, taux, etc.).</span>
+                    {% endif %}
+                    {% if field.errors %}
+                      <span class="field-error">{{ field.errors.0 }}</span>
+                    {% endif %}
+                  </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              <details class="advanced-panel">
+                <summary>Champs avancés</summary>
+                <p class="form-section-note">Ces champs affinent l'estimation et peuvent varier selon la source de données.</p>
+                <div class="form-grid">
+                  {% for field in form %}
+                    {% if field.name != "Indicator" and field.name != "TIME_PERIOD" and field.name != "SEX" and field.name != "UNIT_MEASURE" %}
+                      <div class="field-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                          <span class="field-error">{{ field.errors.0 }}</span>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </details>
+
+              <button type="submit" class="btn" style="grid-column: 1 / -1">
+                Afficher mon estimation
+              </button>
+            </form>
+
+            {% if prediction is not None %}
+              <div class="result-panel">
+                <div class="label">Chiffre estimé pour votre sélection</div>
+                <div class="value">{% if prediction_display_fr %}{{ prediction_display_fr }}{% else %}{{ prediction|floatformat:2 }}{% endif %}</div>
+                <p class="result-tagline">
+                  Ce nombre est <strong>une estimation automatique</strong> calculée à partir des informations que vous avez saisies.
+                </p>
+
+                {% if prediction_explanation %}
+                  <div class="result-plain-meaning">
+                    <h4>En clair : comment lire ce chiffre ?</h4>
+                    <p>{{ prediction_explanation }}</p>
+                  </div>
+                {% endif %}
+
+                <div class="result-explain">
+                  <h4>Comprendre ce résultat simplement</h4>
+                  <p>
+                    Le nombre affiché correspond au scénario que vous avez défini (indicateur, période, sexe, unité).
+                    Il aide à explorer des situations possibles et à mieux comprendre les données de santé infantile.
+                  </p>
+                  <p class="muted">
+                    Pour bien l'interpréter, regardez d'abord <strong>l'indicateur</strong> (ce qui est mesuré)
+                    et <strong>l'unité</strong> (comment la valeur est exprimée).
+                  </p>
+                  {% if prediction_context %}
+                    <p class="result-context-intro">Récapitulatif de ce que vous avez choisi :</p>
+                    <dl>
+                      {% if prediction_context.indicator_label %}
+                        <dt>Indicateur (ce qu’on mesure)</dt>
+                        <dd>{{ prediction_context.indicator_label }}</dd>
+                      {% endif %}
+                      {% if prediction_context.indicator_code %}
+                        <dt>Référence technique</dt>
+                        <dd><code style="font-size: 0.85em">{{ prediction_context.indicator_code }}</code></dd>
+                      {% endif %}
+                      {% if prediction_context.unit_measure %}
+                        <dt>Unité (comment lire le nombre)</dt>
+                        <dd>
+                          <code style="font-size: 0.85em">{{ prediction_context.unit_measure }}</code>
+                          {% if prediction_context.unit_caption_fr %}
+                            <span class="unit-caption">{{ prediction_context.unit_caption_fr }}</span>
+                          {% endif %}
+                        </dd>
+                      {% endif %}
+                      {% if prediction_context.time_period %}
+                        <dt>Période</dt>
+                        <dd>{{ prediction_context.time_period }}</dd>
+                      {% endif %}
+                      {% if prediction_context.sex %}
+                        <dt>Sexe</dt>
+                        <dd>{% if prediction_context.sex == "F" %}Féminin{% elif prediction_context.sex == "M" %}Masculin{% else %}{{ prediction_context.sex }}{% endif %}</dd>
+                      {% endif %}
+                    </dl>
+                  {% endif %}
+                  <p class="muted" style="margin-top: 0.75rem">
+                    Ce résultat sert à <strong>explorer</strong> et à <strong>apprendre</strong>.
+                    Ce n'est pas une statistique officielle UNICEF ou nationale.
+                  </p>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if error %}
+              <div class="alert" role="alert">{{ error }}</div>
+            {% endif %}
+          </div>
+        </article>
+
+        <aside class="side">
+          <div class="side-block">
+            <h3>Aide rapide</h3>
+            <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5">
+              Si vous hésitez, commencez par <strong>Indicateur</strong>, <strong>Période</strong>,
+              <strong>Sexe</strong> et <strong>Unité</strong>, puis cliquez sur <em>Afficher mon estimation</em>.
+            </p>
+          </div>
+          <div class="side-block">
+            <h3>Détails techniques (optionnel)</h3>
+            <details>
+              <summary style="cursor: pointer; color: var(--accent-strong); font-weight: 600; font-size: 0.9rem;">Comparer les 3 modèles</summary>
+              <p style="margin: 0.75rem 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.45">
+                Le meilleur modele est choisi avec le plus petit RMSE.
+              </p>
+              {% if metrics %}
+                {% for name, m in metrics.items %}
+                  <div class="metric-row{% if name == model_name %} best{% endif %}">
+                    <span>
+                      {% if name == "Linear Regression" %}Régression linéaire
+                      {% elif name == "Decision Tree" %}Arbre de décision
+                      {% elif name == "Random Forest" %}Forêt aléatoire
+                      {% else %}{{ name }}{% endif %}
+                    </span>
+                    <span>RMSE {{ m.RMSE|floatformat:2 }} · R² {{ m.TestR2|floatformat:3 }}</span>
+                  </div>
+                {% endfor %}
+              {% else %}
+                <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted)">
+                  Les métriques ne sont pas encore disponibles.
+                </p>
+              {% endif %}
+            </details>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="note">Outil d’estimation basé sur des données UNICEF · calcul automatique</footer>
+{% endblock %}

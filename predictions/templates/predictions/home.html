@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Accueil{% endblock %}
+
+{% block full_bleed %}
+<div class="home-banner-full">
+      <div class="home-banner-inner">
+        <div class="home-intro-badge">UNICEF · Estimation guidee · Interface simple</div>
+      </div>
+      <div class="home-carousel" role="region" aria-roledescription="carrousel" aria-label="Présentation de l’application">
+        <div class="home-slides" id="homeSlides">
+          <article class="home-slide slide-a active" data-slide="0" aria-hidden="false">
+            <h2>Comprendre la santé des enfants</h2>
+            <p>
+              Explorez simplement des indicateurs inspirés des tableaux UNICEF : nombre de décès, taux pour 1&nbsp;000 naissances et autres mesures.
+              Cette application sert à apprendre et à comparer des scénarios.
+            </p>
+          </article>
+          <article class="home-slide slide-b" data-slide="1" aria-hidden="true">
+            <h2>Estimation guidee</h2>
+            <p>
+              Remplissez les champs principaux en premier.
+              L'outil calcule ensuite une estimation adaptee a votre selection.
+            </p>
+          </article>
+          <article class="home-slide slide-c" data-slide="2" aria-hidden="true">
+            <h2>Graphiques faciles a lire</h2>
+            <p>
+              Visualisez la qualite du calcul et la distribution des valeurs avec des graphiques clairs.
+              Vous voyez rapidement quel modele fonctionne le mieux.
+            </p>
+          </article>
+          <article class="home-slide slide-d" data-slide="3" aria-hidden="true">
+            <h2>Simple, utile, pedagogique</h2>
+            <p>
+              Creez un compte pour acceder a l'estimation et aux graphiques.
+              Les chiffres sont des <strong>estimations</strong> pour l'apprentissage, pas des publications officielles.
+            </p>
+          </article>
+        </div>
+
+        <div class="home-carousel-arrows" aria-hidden="false">
+          <button type="button" class="home-arrow home-prev" aria-label="Slide précédent">‹</button>
+          <button type="button" class="home-arrow home-next" aria-label="Slide suivant">›</button>
+        </div>
+
+        <div class="home-carousel-nav" role="tablist" aria-label="Choisir une slide">
+          <button type="button" class="home-dot active" data-index="0" aria-label="Slide 1" aria-current="true"></button>
+          <button type="button" class="home-dot" data-index="1" aria-label="Slide 2"></button>
+          <button type="button" class="home-dot" data-index="2" aria-label="Slide 3"></button>
+          <button type="button" class="home-dot" data-index="3" aria-label="Slide 4"></button>
+        </div>
+      </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="home-wrap">
+      <div class="home-cta-row">
+        {% if user.is_authenticated %}
+        <a class="home-cta home-cta--teal" href="{% url 'predict' %}">Lancer une estimation</a>
+        <a class="home-cta home-cta--violet" href="{% url 'diagrams' %}">Voir les graphiques</a>
+        <a class="home-cta home-cta--amber" href="#explorer">Explorer ci-dessous</a>
+        {% else %}
+        <a class="home-cta home-cta--teal" href="{% url 'login' %}">Connexion</a>
+        <a class="home-cta home-cta--violet" href="{% url 'signup' %}">Créer un compte</a>
+        <a class="home-cta home-cta--sky" href="{% url 'login' %}?next={% url 'predict' %}">Accéder à l’estimation</a>
+        <a class="home-cta home-cta--amber" href="#explorer">Explorer ci-dessous</a>
+        {% endif %}
+      </div>
+
+      <h2 id="explorer" style="font-size:1.15rem; margin: 2rem 0 1rem; font-weight:700; color: var(--text);">Comment ça marche ?</h2>
+      <div class="home-cards-v2">
+        <div class="home-card-v2 home-card-v2--teal">
+          <h3>1) Je renseigne</h3>
+          <p>Je choisis l’indicateur, la période, le sexe et l’unité dans un formulaire guidé.</p>
+          {% if user.is_authenticated %}
+          <a href="{% url 'predict' %}">Commencer</a>
+          {% else %}
+          <a href="{% url 'login' %}">Se connecter</a>
+          {% endif %}
+        </div>
+        <div class="home-card-v2 home-card-v2--violet">
+          <h3>2) Je reçois</h3>
+          <p>Je reçois une estimation et une explication en langage clair pour bien interpréter le chiffre.</p>
+          {% if user.is_authenticated %}
+          <a href="{% url 'predict' %}">Voir mon résultat</a>
+          {% else %}
+          <a href="{% url 'login' %}">Se connecter</a>
+          {% endif %}
+        </div>
+        <div class="home-card-v2 home-card-v2--coral">
+          <h3>3) Je compare</h3>
+          <p>Je consulte les graphiques pour comparer les performances et explorer d’autres scénarios.</p>
+          {% if user.is_authenticated %}
+          <a href="{% url 'diagrams' %}">Voir les graphiques</a>
+          {% else %}
+          <a href="{% url 'login' %}?next={% url 'diagrams' %}">Accéder aux graphiques</a>
+          {% endif %}
+        </div>
+        <div class="home-card-v2 home-card-v2--sky">
+          <h3>Important</h3>
+          <p>Projet de démonstration : utile pour comprendre et explorer, mais ne remplace pas les statistiques officielles.</p>
+        </div>
+      </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var slides = document.querySelectorAll(".home-slide");
+  var dots = document.querySelectorAll(".home-dot");
+  var prevBtn = document.querySelector(".home-prev");
+  var nextBtn = document.querySelector(".home-next");
+  if (!slides.length) return;
+
+  var n = slides.length;
+  var timer = null;
+  var idx = 0;
+
+  function show(j) {
+    if (j < 0) j = n - 1;
+    if (j >= n) j = 0;
+    idx = j;
+    slides.forEach(function (el, k) {
+      var on = k === j;
+      el.classList.toggle("active", on);
+      el.setAttribute("aria-hidden", on ? "false" : "true");
+    });
+    dots.forEach(function (d, k) {
+      d.classList.toggle("active", k === j);
+      d.setAttribute("aria-current", k === j ? "true" : "false");
+    });
+  }
+
+  function nextSlide() { show(idx + 1); }
+  function prevSlide() { show(idx - 1); }
+
+  if (prevBtn) prevBtn.addEventListener("click", function () { prevSlide(); resetTimer(); });
+  if (nextBtn) nextBtn.addEventListener("click", function () { nextSlide(); resetTimer(); });
+  dots.forEach(function (d) {
+    d.addEventListener("click", function () {
+      show(parseInt(d.getAttribute("data-index"), 10));
+      resetTimer();
+    });
+  });
+
+  function resetTimer() {
+    if (timer) clearInterval(timer);
+    timer = setInterval(nextSlide, 7000);
+  }
+  resetTimer();
+})();
+</script>
+{% endblock %}

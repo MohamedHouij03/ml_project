@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Graphiques{% endblock %}
+{% block content %}
+      <header class="hero">
+        <span class="badge">Matplotlib</span>
+        <h1>Graphiques faciles a comprendre</h1>
+        <p class="lead">
+          Ces graphiques montrent des statistiques venant directement de votre fichier CSV.
+          Pas besoin d'etre specialiste: lisez les descriptions sous chaque image.
+        </p>
+      </header>
+
+      <div class="diagrams-grid">
+        {% for c in charts %}
+        <div class="diagram-card">
+          <h3>{{ c.title }}</h3>
+          <img src="{% url 'chart_image' c.slug %}" alt="{{ c.title }}" loading="lazy" width="800" height="450" />
+          {% if c.slug == "indicator_freq" %}
+          <p>Ce graphe montre les 10 indicateurs les plus frequents dans le CSV.</p>
+          {% elif c.slug == "yearly_obs" %}
+          <p>Ce graphe montre la moyenne de OBS_VALUE par annee de reference.</p>
+          {% elif c.slug == "sex_split" %}
+          <p>Ce graphe montre la repartition des lignes de donnees par sexe.</p>
+          {% else %}
+          <p>Histogramme des valeurs OBS_VALUE presentes dans le CSV.</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+{% endblock %}

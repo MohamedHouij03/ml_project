@@ -1,0 +1,14 @@
+name: infant-mortality-ml
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - django
+      - pandas
+      - numpy
+      - scikit-learn
+      - matplotlib
+      - joblib
+      - jupyter
