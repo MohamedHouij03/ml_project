@@ -46,9 +46,9 @@ Desktop.ini
 # Logs
 *.log
 
-# Data (ne pas commiter les gros fichiers)
-# data/*.csv
-# data/*.zip
+# Data
+# ml_artifacts/*.joblib  # keep model files untracked (generated during build)
+*.pkl
 
 # Environment
 .env
