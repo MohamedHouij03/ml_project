@@ -811,13 +811,7 @@
       <h2 class="footer-heading">Navigation</h2>
       <ul>
         <li><a href="{% url 'home' %}">Accueil</a></li>
-        {% if user.is_authenticated %}
         <li><a href="{% url 'predict' %}">Estimation</a></li>
-        <li><a href="{% url 'diagrams' %}">Graphiques</a></li>
-        {% else %}
-        <li><a href="{% url 'login' %}?next={% url 'predict' %}">Estimation</a> <span class="footer-note">(connexion)</span></li>
-        <li><a href="{% url 'login' %}?next={% url 'diagrams' %}">Graphiques</a> <span class="footer-note">(connexion)</span></li>
-        {% endif %}
       </ul>
     </nav>
     <nav class="footer-nav" aria-label="Compte utilisateur">

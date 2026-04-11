@@ -3,9 +3,9 @@ from decimal import Decimal, ROUND_HALF_UP
 
 import pandas as pd
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render
-from .charts import CHART_REGISTRY, get_chart_png
+
 from .forms import PredictionForm
 from .interpretation import explain_estimate_fr, unit_caption_fr
 from .ml_loader import load_ml_artifacts
@@ -90,23 +90,6 @@ def predict_view(request):
             "metrics": metadata.get("results", {}),
         },
     )
-
-
-def diagrams(request):
-    charts = [{"slug": k, "title": v[0]} for k, v in CHART_REGISTRY.items()]
-    return render(
-        request,
-        "predictions/diagrams.html",
-        {"charts": charts},
-    )
-
-
-def chart_image(request, chart_name: str):
-    try:
-        png = get_chart_png(chart_name)
-    except KeyError as e:
-        raise Http404("Graphique inconnu.") from e
-    return HttpResponse(png, content_type="image/png")
 
 
 @login_required

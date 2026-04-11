@@ -16,8 +16,8 @@ import pandas as pd
 
 def _data_csv_path() -> Path:
     return (
-        Path(__file__).resolve().parent.parent.parent
-        / "UNICEF-CME_DF_2021_WQ-1.0-download (1).csv"
+        Path(__file__).resolve().parent.parent
+        / "data" / "UNICEF-CME_DF_2021_WQ-1.0-download (1).csv"
     )
 
 
