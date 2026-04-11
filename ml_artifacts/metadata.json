@@ -1,0 +1,187 @@
+{
+  "best_model_name": "Random Forest",
+  "feature_columns": [
+    "Indicator",
+    "SEX",
+    "REF_DATE",
+    "UNIT_MEASURE",
+    "SERIES_NAME"
+  ],
+  "numeric_features": [
+    "REF_DATE"
+  ],
+  "categorical_options": {
+    "Indicator": [
+      "Child Mortality rate age 1-4",
+      "Child deaths age 1 to 4",
+      "Deaths age 10 to 14",
+      "Deaths age 10 to 19",
+      "Deaths age 15 to 19",
+      "Deaths age 15 to 24",
+      "Deaths age 20 to 24",
+      "Deaths age 5 to 14",
+      "Deaths age 5 to 24",
+      "Deaths age 5 to 9",
+      "Infant deaths",
+      "Infant mortality rate",
+      "Mortality rate age 10-14",
+      "Mortality rate age 10-19",
+      "Mortality rate age 15-19",
+      "Mortality rate age 15-24",
+      "Mortality rate age 20-24",
+      "Mortality rate age 5-14",
+      "Mortality rate age 5-24",
+      "Mortality rate age 5-9",
+      "Under-five deaths",
+      "Under-five mortality rate"
+    ],
+    "SEX": [
+      "F",
+      "M"
+    ],
+    "UNIT_MEASURE": [
+      "D",
+      "D_PER_1000_1",
+      "D_PER_1000_10",
+      "D_PER_1000_15",
+      "D_PER_1000_20",
+      "D_PER_1000_5",
+      "D_PER_1000_B"
+    ],
+    "SERIES_NAME": [
+      "1169",
+      "1223",
+      "1224",
+      "1225",
+      "1227",
+      "153",
+      "2103",
+      "2175",
+      "2211",
+      "324",
+      "441",
+      "490",
+      "879",
+      "UN_IGME"
+    ]
+  },
+  "ref_date_bounds": {
+    "min": 1962.5,
+    "max": 2023.5
+  },
+  "results": {
+    "Linear Regression": {
+      "RMSE": 1711.9457473404332,
+      "MAE": 1598.871624434386,
+      "TestR2": -17.564653384452285
+    },
+    "Decision Tree": {
+      "RMSE": 142.33153662956076,
+      "MAE": 63.374255413029,
+      "TestR2": 0.8716756343052741
+    },
+    "Random Forest": {
+      "RMSE": 136.4588289631678,
+      "MAE": 37.78978561244726,
+      "TestR2": 0.8820466906652255
+    }
+  },
+  "all_experiments": {
+    "Block A - Avec LOWER_BOUND et UPPER_BOUND": {
+      "features": [
+        "Indicator",
+        "SEX",
+        "REF_DATE",
+        "UNIT_MEASURE",
+        "SERIES_NAME",
+        "LOWER_BOUND",
+        "UPPER_BOUND"
+      ],
+      "rows": 2400,
+      "train_rows": 1920,
+      "test_rows": 480,
+      "best_model_name": "Linear Regression",
+      "results": {
+        "Linear Regression": {
+          "RMSE": 3.8982721846861454,
+          "MAE": 2.8261432145136687,
+          "TestR2": 0.9999037388228441
+        },
+        "Decision Tree": {
+          "RMSE": 23.6205402751642,
+          "MAE": 7.771506093392558,
+          "TestR2": 0.996465837583114
+        },
+        "Random Forest": {
+          "RMSE": 8.526074170404247,
+          "MAE": 2.8979300863694744,
+          "TestR2": 0.9995395260536744
+        }
+      }
+    },
+    "Block B - Sans LOWER_BOUND et UPPER_BOUND": {
+      "features": [
+        "Indicator",
+        "SEX",
+        "REF_DATE",
+        "UNIT_MEASURE",
+        "SERIES_NAME"
+      ],
+      "rows": 2400,
+      "train_rows": 1920,
+      "test_rows": 480,
+      "best_model_name": "Random Forest",
+      "results": {
+        "Linear Regression": {
+          "RMSE": 1711.9457473404332,
+          "MAE": 1598.871624434386,
+          "TestR2": -17.564653384452285
+        },
+        "Decision Tree": {
+          "RMSE": 142.33153662956076,
+          "MAE": 63.374255413029,
+          "TestR2": 0.8716756343052741
+        },
+        "Random Forest": {
+          "RMSE": 136.4588289631678,
+          "MAE": 37.78978561244726,
+          "TestR2": 0.8820466906652255
+        }
+      }
+    },
+    "Block C - Features etendues": {
+      "features": [
+        "Indicator",
+        "SEX",
+        "REF_DATE",
+        "UNIT_MEASURE",
+        "SERIES_NAME",
+        "OBS_STATUS",
+        "SERIES_YEAR",
+        "TIME_PERIOD",
+        "INTERVAL"
+      ],
+      "rows": 2400,
+      "train_rows": 1920,
+      "test_rows": 480,
+      "best_model_name": "Random Forest",
+      "results": {
+        "Linear Regression": {
+          "RMSE": 2413.520186076012,
+          "MAE": 2240.4737796970044,
+          "TestR2": -35.898500808385656
+        },
+        "Decision Tree": {
+          "RMSE": 143.3615754633437,
+          "MAE": 63.99925541302898,
+          "TestR2": 0.8698115728836519
+        },
+        "Random Forest": {
+          "RMSE": 134.92032377666345,
+          "MAE": 37.958603097545854,
+          "TestR2": 0.884691426483158
+        }
+      }
+    }
+  }
+}

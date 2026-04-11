@@ -92,7 +92,6 @@ def predict_view(request):
     )
 
 
-@login_required
 def diagrams(request):
     charts = [{"slug": k, "title": v[0]} for k, v in CHART_REGISTRY.items()]
     return render(
@@ -102,7 +101,6 @@ def diagrams(request):
     )
 
 
-@login_required
 def chart_image(request, chart_name: str):
     try:
         png = get_chart_png(chart_name)
